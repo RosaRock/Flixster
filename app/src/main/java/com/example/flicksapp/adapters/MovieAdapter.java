@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     Context context;
@@ -83,7 +84,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
                 imageUrl = movie.getBackdropPath();
             else
                 imageUrl = movie.getPosterPath();
-            Glide.with(context).load(imageUrl).into(ivPoster);
+            //placeholder image shown while requested is in process
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_baseline_image_not_supported_24)
+                    .error(R.drawable.ic_baseline_image_not_supported_24)
+                    .into(ivPoster);
         }
     }
 }
