@@ -1,0 +1,2 @@
+rootProject.name = "FlicksApp"
+include ':app'

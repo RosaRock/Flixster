@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">FlicksApp</string>
+    <string name="ivPoster_Description">Poster Image for Movie</string>
+</resources>
