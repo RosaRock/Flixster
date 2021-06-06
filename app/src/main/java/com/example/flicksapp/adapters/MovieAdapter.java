@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
@@ -85,8 +87,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             else
                 imageUrl = movie.getPosterPath();
             //placeholder image shown while requested is in process
+            int radius = 20; // corner radius, higher value = more rounded
+            int margin = 5; // crop margin, set to 0 for corners with no crop
             Glide.with(context)
                     .load(imageUrl)
+                    .transform(new RoundedCornersTransformation(radius, margin))
                     .placeholder(R.drawable.ic_baseline_image_not_supported_24)
                     .error(R.drawable.ic_baseline_image_not_supported_24)
                     .into(ivPoster);
