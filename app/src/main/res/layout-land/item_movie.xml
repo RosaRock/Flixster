@@ -27,7 +27,7 @@
         android:id="@+id/rb_voteAverage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivPoster"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         android:gravity="center"
@@ -40,12 +40,12 @@
 
     <ImageView
         android:id="@+id/ivPoster"
-        android:layout_width="160dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
         android:contentDescription="@string/ivPoster_Description"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rb_voteAverage"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
