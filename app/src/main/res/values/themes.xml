@@ -22,4 +22,9 @@
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="background">@color/black</item>
     </style>
+
+    <style name="RatingBar" parent="@style/Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlNormal">@color/lightGray</item>
+        <item name="colorControlActivated">@color/gold</item>
+    </style>
 </resources>

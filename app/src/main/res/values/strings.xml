@@ -2,4 +2,5 @@
     <string name="app_name">FlicksApp</string>
     <string name="ivPoster_Description">Poster Image for Movie</string>
     <string name="app_title">Flixster</string>
+    <string name="popular">Popular</string>
 </resources>

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -68,6 +69,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
+        RatingBar rb_voteAverage;
+        ImageView iv_popular;
 
         // grab views
         public ViewHolder(@NonNull @NotNull View itemView) {
@@ -75,17 +78,27 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster = itemView.findViewById(R.id.ivPoster);
+            rb_voteAverage = itemView.findViewById(R.id.rb_voteAverage);
+            iv_popular = itemView.findViewById(R.id.iv_popular);
         }
 
         // bind data to views
         public void bind(Movie movie) {
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
+
+            if (movie.isPopular()) {
+                iv_popular.setVisibility(View.VISIBLE);
+            }
+
             String imageUrl;
-            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 imageUrl = movie.getBackdropPath();
+                rb_voteAverage.setRating((float)movie.getRating());
+            }
             else
                 imageUrl = movie.getPosterPath();
+
             //placeholder image shown while requested is in process
             int radius = 20; // corner radius, higher value = more rounded
             int margin = 5; // crop margin, set to 0 for corners with no crop
