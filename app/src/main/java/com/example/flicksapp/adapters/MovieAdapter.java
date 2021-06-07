@@ -24,36 +24,18 @@ import java.util.List;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
+public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     Context context;
     List<Movie> movies;
+
+    // used for hetergeneous layout
+    private final int POPULAR = 1;
 
     // Constructor will receive context and list of movies
     public MovieAdapter(Context context, List<Movie> movies) {
         this.context = context;
         this.movies = movies;
-    }
-
-    // inflates layout from .XML layout and return the holder.
-    @NonNull
-    @NotNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        Log.d("MovieAdapter","onCreateViewHolder");
-        //inflate view from context
-        View movieView = LayoutInflater.from(context).inflate(R.layout.item_movie,parent,false);
-        return new ViewHolder(movieView);
-    }
-
-    // Populates data into the item through the holder
-    @Override
-    public void onBindViewHolder(@NonNull @NotNull ViewHolder holder, int position) {
-        Log.d("MovieAdapter","onBindViewHolder"+position);
-        //get the movie at the passed position
-        Movie movie = movies.get(position);
-        //Bind the movie data into the view holder
-        holder.bind(movie);
     }
 
     // Returns the total count of items in the list
@@ -62,24 +44,71 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         return movies.size();
     }
 
+    // used for hetergeneous layout
+    @Override
+    public int getItemViewType(int position) {
+        if (movies.get(position).isPopular()) {
+            return POPULAR;
+        }
+        return -1;
+    }
+
+    // inflates layout from .XML layout and return the holder.
+    @NonNull
+    @NotNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+        Log.d("MovieAdapter","onCreateViewHolder");
+        //inflate view from context
+        RecyclerView.ViewHolder movieView;
+        // used for hetergeneous layout
+        LayoutInflater inflater = LayoutInflater.from(context);
+        switch (viewType) {
+            case POPULAR:
+                View v1 = inflater.inflate(R.layout.item_movie_popular, parent, false);
+                movieView = new ViewHolder_popular(v1);
+                break;
+            default: //sucky
+                View v = inflater.inflate(R.layout.item_movie, parent, false);
+                movieView = new ViewHolder_sucky(v);
+                break;
+        }
+        return movieView;
+    }
+
+    // Populates data into the item through the holder
+    @Override
+    public void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position) {
+        Log.d("MovieAdapter","onBindViewHolder"+position);
+        Movie movie = movies.get(position);
+        switch (holder.getItemViewType()) {
+            case POPULAR:
+                ViewHolder_popular vh1 = (ViewHolder_popular) holder;
+                vh1.bind(movie);
+                break;
+            default:
+                ViewHolder_sucky vh2 = (ViewHolder_sucky) holder;
+                vh2.bind(movie);
+                break;
+        }
+    }
+
     // describes an item view and metadata about its place withing the RV view
     // object represents each item on the collection and used to display it
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder_sucky extends RecyclerView.ViewHolder{
 
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
         RatingBar rb_voteAverage;
-        ImageView iv_popular;
 
         // grab views
-        public ViewHolder(@NonNull @NotNull View itemView) {
+        public ViewHolder_sucky(@NonNull @NotNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster = itemView.findViewById(R.id.ivPoster);
             rb_voteAverage = itemView.findViewById(R.id.rb_voteAverage);
-            iv_popular = itemView.findViewById(R.id.iv_popular);
         }
 
         // bind data to views
@@ -87,13 +116,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             tvTitle.setText(movie.getTitle());
             tvOverview.setText(movie.getOverview());
 
-            if (movie.isPopular()) {
-                iv_popular.setVisibility(View.VISIBLE);
-            }
-
             String imageUrl;
             if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                imageUrl = movie.getBackdropPath();
+                imageUrl = movie.getPosterPath();
                 rb_voteAverage.setRating((float)movie.getRating());
             }
             else
@@ -105,6 +130,39 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             Glide.with(context)
                     .load(imageUrl)
                     .transform(new RoundedCornersTransformation(radius, margin))
+                    .placeholder(R.drawable.ic_baseline_image_not_supported_24)
+                    .error(R.drawable.ic_baseline_image_not_supported_24)
+                    .into(ivPoster);
+        }
+    }
+    public class ViewHolder_popular extends RecyclerView.ViewHolder {
+
+        TextView tvTitle;
+        TextView tvOverview;
+        ImageView ivPoster;
+        ImageView iv_popular;
+
+        // grab views
+        public ViewHolder_popular(@NonNull @NotNull View itemView) {
+            super(itemView);
+            tvTitle = itemView.findViewById(R.id.tvTitle);
+            ivPoster = itemView.findViewById(R.id.ivPoster);
+            iv_popular = itemView.findViewById(R.id.iv_popular);
+            tvOverview = itemView.findViewById(R.id.tvOverview);
+        }
+
+        // bind data to views
+        public void bind(Movie movie) {
+            tvTitle.setText(movie.getTitle());
+            iv_popular.setVisibility(View.VISIBLE);
+            String imageUrl = movie.getBackdropPath();
+            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                tvOverview.setText(movie.getOverview());
+
+            }
+            //placeholder image shown while requested is in process
+            Glide.with(context)
+                    .load(imageUrl)
                     .placeholder(R.drawable.ic_baseline_image_not_supported_24)
                     .error(R.drawable.ic_baseline_image_not_supported_24)
                     .into(ivPoster);

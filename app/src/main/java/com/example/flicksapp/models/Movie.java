@@ -38,7 +38,7 @@ public class Movie {
 
     // chcek if a movie is popular  ( >5 stars = popular)
     private Boolean checkPopularity() {
-        return rating >= 5;
+        return rating >= 8;
     }
     // Getters for fields
     public String getPosterPath() {
@@ -46,9 +46,9 @@ public class Movie {
         return String.format("https://image.tmdb.org/t/p/w342/%s",posterPath);
     }
 
-    public String getBackdropPath() {
+    public String getBackdropPath(){
         //hardcode image size from configuration api + append relative backdrop path
-        return String.format("https://image.tmdb.org/t/p/w342/%s",backdropPath);
+        return String.format("https://image.tmdb.org/t/p/w1280/%s",backdropPath);
     }
 
     public String getTitle() {
